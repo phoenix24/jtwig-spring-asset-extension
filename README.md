@@ -1,4 +1,4 @@
-# jtwig-spring-asset-extension
+# Jtwig Spring Asset Extension
 
 **Build Stats**
 
