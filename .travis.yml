@@ -1,0 +1,15 @@
+language: java
+jdk:
+  - oraclejdk7
+
+env:
+  TERM: dumb
+
+after_success:
+ - gradle jacocoTestReport coveralls
+ - |
+     if [[ ($TRAVIS_BRANCH == master) &&
+           ($TRAVIS_PULL_REQUEST == false) &&
+           ( (! $TRAVIS_JOB_NUMBER == *.*) || ($TRAVIS_JOB_NUMBER == *.1) ) ]] ; then
+       gradle bintrayUpload
+     fi
