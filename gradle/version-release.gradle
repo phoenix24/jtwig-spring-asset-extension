@@ -1,0 +1,83 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+version = releaseVersion()
+group = "org.jtwig"
+
+import org.jtwig.version.GetVersion;
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "http://dl.bintray.com/jtwig/maven"
+        }
+    }
+
+    dependencies {
+        classpath 'org.jtwig:jtwig-versioning:1.+'
+    }
+}
+
+def releaseVersion () {
+    def isCi = System.getenv("CI")
+    if ("true".equals(isCi) && "false".equals(System.getenv("TRAVIS_PULL_REQUEST")) && "master".equals(System.getenv("TRAVIS_BRANCH"))) {
+        return GetVersion.version(System.getenv('BINTRAY_USER'), System.getenv('BINTRAY_KEY'),  rootProject.name)
+    } else {
+        return "SNAPSHOT"
+    }
+}
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main.compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+
+publishing {
+    publications {
+        BintrayArchives(MavenPublication) {
+            from components.java
+
+            pom.withXml {
+                // Generate map of resolved versions
+                Map resolvedVersionMap = [:]
+                Set<ResolvedArtifact> resolvedArtifacts = configurations.compile.getResolvedConfiguration().getResolvedArtifacts()
+                resolvedArtifacts.addAll(configurations.testCompile.getResolvedConfiguration().getResolvedArtifacts())
+                resolvedArtifacts.each {
+                    ModuleVersionIdentifier mvi = it.getModuleVersion().getId();
+                    resolvedVersionMap.put("${mvi.getGroup()}:${mvi.getName()}", mvi.getVersion())
+                }
+
+                // Update dependencies with resolved versions
+                asNode().dependencies.first().each {
+                    def groupId = it.get("groupId").first().value().first()
+                    def artifactId = it.get("artifactId").first().value().first()
+                    it.get("version").first().value = resolvedVersionMap.get("${groupId}:${artifactId}")
+                }
+            }
+        }
+    }
+}
