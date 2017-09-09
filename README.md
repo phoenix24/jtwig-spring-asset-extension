@@ -3,7 +3,7 @@
 **Build Stats**
 
 [![Build Status](https://travis-ci.org/jtwig/jtwig-spring-asset-extension.svg?branch=master)](https://travis-ci.org/jtwig/jtwig-spring-asset-extension)
-[![Coverage Status](https://coveralls.io/repos/github/jtwig/jtwig-spring-asset-extension/badge.svg?branch=master)](https://coveralls.io/github/jtwig/jtwig-spring-asset-extension?branch=master)
+[![codecov](https://codecov.io/gh/jtwig/jtwig-spring-asset-extension/branch/master/graph/badge.svg)](https://codecov.io/gh/jtwig/jtwig-spring-asset-extension)
 [![Download](https://api.bintray.com/packages/jtwig/maven/jtwig-spring-asset-extension/images/download.svg) ](https://bintray.com/jtwig/maven/jtwig-spring-asset-extension/_latestVersion)
 
 **Licensing**
