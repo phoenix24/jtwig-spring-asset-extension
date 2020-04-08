@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,7 +70,7 @@ public class SpringAssetExtensionTest {
         }
 
         public static int getPort () {
-            return ((AnnotationConfigEmbeddedWebApplicationContext) ExampleController.applicationContext).getEmbeddedServletContainer().getPort();
+            return ((AnnotationConfigServletWebServerApplicationContext) ExampleController.applicationContext).getWebServer().getPort();
         }
 
         @RequestMapping("")
